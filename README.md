@@ -11,6 +11,6 @@ Here we have to describe all the modules and working principles.
 In this section the steps to generate the project are listed.
 1. Open Vivado
 2. In the TCL console run:
-```bash
-/absolute/path/to/fft_advlabprj/firmware/generate_project.tcl
+```tcl
+source /absolute/path/to/fft_advlabprj/firmware/generate_project.tcl
 ```
