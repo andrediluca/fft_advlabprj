@@ -1,6 +1,7 @@
 # Fast Fourier transform visualiser
 ## Project overview
-![Block scheme](img/blockscheme.jpeg)
+![Block scheme](doc/blockscheme.svg)
+
 Here we have to describe all the modules and working principles.
 
 ## Running this repo
