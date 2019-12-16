@@ -12,25 +12,32 @@ module delay
   input wire signed [15:0] x_in_re, // real part of a
   input wire signed [15:0] x_in_im, // im part of a
   //output
-  wire signed [15:0] x_out_re,
-  wire signed [15:0] x_out_im
+  output wire signed [15:0] x_out_re,
+  output wire signed [15:0] x_out_im
   );
   //
-  reg [delay_len-1:0] delay_sr_re [15:0];
-  reg [delay_len-1:0] delay_sr_im [15:0];
+  reg [15:0] delay_sr_re [delay_len-1:0];
+  reg [15:0] delay_sr_im [delay_len-1:0];
 
   genvar i;
   generate
-    for(i = 0; i < 16; i = i + 1) begin
-      always @(posedge clk) begin
-        if (enable) begin
-          delay_sr_re[i] <= {delay_sr_re[i][delay_len - 2 : 0], x_in_re[i]};
-          delay_sr_im[i] <= {delay_sr_im[i][delay_len - 2 : 0], x_in_im[i]};
-        end
-
+  for(i = 0; i < delay_len; i = i + 1) begin
+    always @(posedge clk) begin
+      if (enable) begin
+        delay_sr_re[i+1] <= delay_sr_re[i];
+        delay_sr_im[i+1] <= delay_sr_im[i];
       end
-      assign x_out_re[i] = delay_sr_re[i][delay_len - 1];
-      assign x_out_im[i] = delay_sr_im[i][delay_len - 1];
     end
+  end
   endgenerate
+
+  always @(posedge clk) begin
+    if (enable) begin
+      delay_sr_re[0] <= x_in_re;
+      delay_sr_im[0] <= x_in_im;
+    end
+  end
+
+  assign x_out_re = delay_sr_re[delay_len - 1];
+  assign x_out_im = delay_sr_im[delay_len - 1];
 endmodule
