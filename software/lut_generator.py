@@ -16,5 +16,5 @@ f = open("sin.mem", "w")
 
 for i in range(512):
    # f.write("%.9f\n" %int(np.cos(2*np.pi/1024*i)*10**4))
-     f.write(tohex(int(np.sin(2*np.pi/1024*i)*10**4),16)[2:]+"\n")
+     f.write(tohex(int(-np.sin(2*np.pi/1024*i)*10**4),16)[2:]+"\n")
 f.close()
