@@ -1,2 +1,2 @@
 firmware/FFT_spctr
-firmware/src/TRIG_LUT/*.list
+software/*.mem
