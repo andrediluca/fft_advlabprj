@@ -7,7 +7,6 @@ module twiddle_rom
 	parameter stage_no = 1
 )
 (
-	input clk,
 	input wire [15:0] address,
 	output reg signed [15:0] W_re,
 	output reg signed [15:0] W_im
@@ -24,7 +23,7 @@ module twiddle_rom
 	end
 
 
-	always @(posedge clk) begin
+	always @(address) begin
 		W_re <= cos_lut[address];
 		W_im <= sin_lut[address];
 	end
