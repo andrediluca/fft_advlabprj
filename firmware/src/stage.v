@@ -7,7 +7,7 @@ module stage
 	input wire clk,
 	input wire enable,
 	input wire ctrl,
-	inout wire [15:0] address,
+	input wire [15:0] address,
 	input wire signed [15:0] bf_xb_re,
 	input wire signed [15:0] bf_xb_im,
 	output wire signed [15:0] X_out_re,
