@@ -21,7 +21,7 @@ module delay
 
   genvar i;
   generate
-  for(i = 0; i < delay_len; i = i + 1) begin
+  for(i = 0; i < delay_len-1; i = i + 1) begin
     always @(posedge clk) begin
       if (enable) begin
         delay_sr_re[i+1] <= delay_sr_re[i];
