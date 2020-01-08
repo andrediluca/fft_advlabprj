@@ -24,8 +24,8 @@ module twiddle_rom
 
 
 	always @(address) begin
-		W_re <= cos_lut[address*stage_no];
-		W_im <= sin_lut[address*stage_no];
+		W_re <= cos_lut[address*(2**stage_no)];
+		W_im <= sin_lut[address*(2**stage_no)];
 	end
 
 endmodule
