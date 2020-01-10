@@ -5,16 +5,22 @@ import numpy as np
 def tohex(val, nbits):
     return hex((val + (1 << nbits)) % (1 << nbits))
 
-f = open("cos.mem", "w")
+frequency = [1000, 10000]
+npoints = 1024
+nbits = 8
+for freq in frequency:
+    cos_name = "cos_%d.mem" %freq
+    sin_name = "sin_%d.mem"%freq
 
-for i in range(512):
-   # f.write("%.9f\n" %int(np.cos(2*np.pi/1024*i)*10**4))
-     f.write(tohex(int(np.cos(2*np.pi/1024*i)*10**4),16)[2:]+"\n")
-f.close()
+    f = open(cos_name, "w")
+    for i in range(npoints):
+       # f.write("%.9f\n" %int(np.cos(2*np.pi/1024*i)*10**4))
+         f.write(tohex(int(np.cos(2*np.pi/npoints*i * freq)*10**4),nbits)[2:]+"\n")
+    f.close()
 
-f = open("sin.mem", "w")
+    f = open(sin_name, "w")
 
-for i in range(512):
-   # f.write("%.9f\n" %int(np.cos(2*np.pi/1024*i)*10**4))
-     f.write(tohex(int(-np.sin(2*np.pi/1024*i)*10**4),16)[2:]+"\n")
-f.close()
+    for i in range(npoints):
+       # f.write("%.9f\n" %int(np.cos(2*np.pi/1024*i)*10**4))
+         f.write(tohex(int(-np.sin(2*np.pi/npoints*i * freq)*10**4),nbits)[2:]+"\n")
+    f.close()
