@@ -1,2 +1,3 @@
 firmware/FFT_spctr
-software/*.mem
+*.mem
+*checkpoint.ipynb
