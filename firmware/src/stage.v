@@ -1,17 +1,17 @@
 module stage
 #(
-	parameter stage_no = 1,
-	parameter FFT_N = 1024
+  parameter stage_no = 1,
+  parameter FFT_N = 1024
 )
 (
-	input wire clk,
-	input wire enable,
-	input wire ctrl,
-	input wire [15:0] address,
-	input wire signed [15:0] bf_xb_re,
-	input wire signed [15:0] bf_xb_im,
-	output wire signed [15:0] X_out_re,
-	output wire signed [15:0] X_out_im
+  input wire clk,
+  input wire enable,
+  input wire ctrl,
+  input wire [15:0] address,
+  input wire signed [15:0] bf_xb_re,
+  input wire signed [15:0] bf_xb_im,
+  output wire signed [15:0] X_out_re,
+  output wire signed [15:0] X_out_im
 );
 
 // butterfly I/O
@@ -27,9 +27,9 @@ assign dly_in_im = (ctrl) ? bf_Xb_im : bf_xb_im;
 
 
 twiddle_rom #(.rom_len(FFT_N/2), .stage_no(stage_no)) rom_inst(
-	.address(address),
-	.W_re(W_re),
-	.W_im(W_im)
+  .address(address),
+  .W_re(W_re),
+  .W_im(W_im)
 );
 
 // Last stage has no delay, so we skip the delay line module
@@ -50,18 +50,18 @@ generate
 endgenerate
 
 butterfly butterfly_inst(
-	.clk(clk),
-	.enable(enable),
-	.xa_re(dly_out_re),
-	.xa_im(dly_out_im),
-	.xb_re(bf_xb_re),
-	.xb_im(bf_xb_im),
-	.W_re(W_re),
-	.W_im(W_im),
-	.Xa_re(bf_Xa_re),
-	.Xa_im(bf_Xa_im),
-	.Xb_re(bf_Xb_re),
-	.Xb_im(bf_Xb_im)
+  .clk(clk),
+  .enable(enable),
+  .xa_re(dly_out_re),
+  .xa_im(dly_out_im),
+  .xb_re(bf_xb_re),
+  .xb_im(bf_xb_im),
+  .W_re(W_re),
+  .W_im(W_im),
+  .Xa_re(bf_Xa_re),
+  .Xa_im(bf_Xa_im),
+  .Xb_re(bf_Xb_re),
+  .Xb_im(bf_Xb_im)
 );
 
 endmodule
