@@ -27,11 +27,11 @@ assign dly_in_im = (ctrl) ? bf_Xb_im : bf_xb_im;
 
 
 
-// Last stage has no delay, so we skip the delay line module
+// Last stage has no delay and a single element ROM, so we skip the delay line module and ROM.
 generate
   if ( stage_no != $clog2(FFT_N) ) begin
 
-    delay #(.delay_len($clog2(FFT_N)-stage_no-1)) delay_line(
+    delay #(.delay_len(FFT_N/2**(stage_no+1)-1)) delay_line(
       .clk(clk),
       .enable(enable),
       .x_in_re(dly_in_re),
