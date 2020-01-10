@@ -3,17 +3,17 @@
 **********************************************************/
 module twiddle_rom
 #(
-	parameter rom_len = 512,
+	parameter FFT_N = 1024,
 	parameter stage_no = 1
 )
 (
-	input wire [15:0] address,
+	input wire [$clog2(FFT_N)-stage_no-2:0] address,
 	output reg signed [15:0] W_re,
 	output reg signed [15:0] W_im
 );
 
-	reg signed [15:0] sin_lut [rom_len-1:0];
-	reg signed [15:0] cos_lut [rom_len-1:0];
+	reg signed [15:0] sin_lut [FFT_N/2-1:0];
+	reg signed [15:0] cos_lut [FFT_N/2-1:0];
 
 	// initialize lut ROM
 	//integer n;

@@ -1,13 +1,13 @@
 module stage
 #(
-  parameter stage_no = 1,
-  parameter FFT_N = 1024
+  parameter FFT_N = 1024,
+  parameter stage_no = 1
 )
 (
   input wire clk,
   input wire enable,
   input wire ctrl,
-  input wire [15:0] address,
+  input wire [$clog2(FFT_N)-stage_no-2:0] address,
   input wire signed [15:0] bf_xb_re,
   input wire signed [15:0] bf_xb_im,
   output wire signed [15:0] X_out_re,
@@ -26,16 +26,12 @@ assign dly_in_re = (ctrl) ? bf_Xb_re : bf_xb_re;
 assign dly_in_im = (ctrl) ? bf_Xb_im : bf_xb_im;
 
 
-twiddle_rom #(.rom_len(FFT_N/2), .stage_no(stage_no)) rom_inst(
-  .address(address),
-  .W_re(W_re),
-  .W_im(W_im)
-);
 
 // Last stage has no delay, so we skip the delay line module
 generate
-  if ( (FFT_N/2**(stage_no+1)-1) > 0 ) begin
-    delay #(.delay_len(FFT_N/2**(stage_no+1)-1)) delay_line(
+  if ( stage_no != $clog2(FFT_N) ) begin
+
+    delay #(.delay_len($clog2(FFT_N)-stage_no-1)) delay_line(
       .clk(clk),
       .enable(enable),
       .x_in_re(dly_in_re),
@@ -43,9 +39,20 @@ generate
       .x_out_re(dly_out_re),
       .x_out_im(dly_out_im)
     );
+
+    twiddle_rom #(.FFT_N(FFT_N), .stage_no(stage_no)) rom_inst(
+      .address(address),
+      .W_re(W_re),
+      .W_im(W_im)
+   );
+
   end else begin
+
     assign dly_out_re = dly_in_re;
     assign dly_out_im = dly_in_im;
+    assign W_re = 16'h2710;
+    assign W_im = 0;
+
   end
 endgenerate
 
