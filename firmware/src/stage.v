@@ -32,14 +32,22 @@ twiddle_rom #(.rom_len(FFT_N/2), .stage_no(stage_no)) rom_inst(
 	.W_im(W_im)
 );
 
-delay #(.delay_len(FFT_N/2**(stage_no+1)-1))	delay_line(
-	.clk(clk),
-	.enable(enable),
-	.x_in_re(dly_in_re),
-	.x_in_im(dly_in_im),
-	.x_out_re(dly_out_re),
-	.x_out_im(dly_out_im)
-);
+// Last stage has no delay, so we skip the delay line module
+generate
+  if ( (FFT_N/2**(stage_no+1)-1) > 0 ) begin
+    delay #(.delay_len(FFT_N/2**(stage_no+1)-1)) delay_line(
+      .clk(clk),
+      .enable(enable),
+      .x_in_re(dly_in_re),
+      .x_in_im(dly_in_im),
+      .x_out_re(dly_out_re),
+      .x_out_im(dly_out_im)
+    );
+  end else begin
+    assign dly_out_re = dly_in_re;
+    assign dly_out_im = dly_in_im;
+  end
+endgenerate
 
 butterfly butterfly_inst(
 	.clk(clk),
