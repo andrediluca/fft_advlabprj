@@ -17,6 +17,7 @@ reg signed [15:0] test_data [1023:0];
 reg signed [15:0] result_re [1023:0];
 reg signed [15:0] result_im [1023:0];
 
+
 integer i;
 
 FFT_top uut (
@@ -33,19 +34,17 @@ always #(tclk/2) clk = ~clk;
 
 initial begin
 	rst = 1;
+	wait(clk == 1'b1);
 	enable = 0;
 	#100;
 	xb_im = 0;
-	$readmemh("sin_1000.mem", test_data);
+	$readmemh("sin_10.mem", test_data);
 	rst = 0;
 	enable = 1;
 	for(i=0; i<1024; i=i+1) begin
 		xb_re = test_data[i];
-		#tclk;
+		if (i != 1023) #tclk;
 	end
-
-	// wait for the fist reult to appear (N+log2(N))
-	#(tclk*10);
 
 	for(i=0; i<1024; i=i+1) begin
 		result_re[i] = Xb_re;
