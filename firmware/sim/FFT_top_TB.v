@@ -43,7 +43,7 @@ initial begin
 	enable = 1;
 	for(i=0; i<1024; i=i+1) begin
 		xb_re = test_data[i];
-		if (i != 1023) #tclk;
+		#tclk;
 	end
 
 	for(i=0; i<1024; i=i+1) begin
