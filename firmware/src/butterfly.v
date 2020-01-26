@@ -64,11 +64,13 @@ always @(posedge clk) begin
 
 	mult_1 = diff_re * W_re;
 	mult_2 = diff_im * W_im;
-	Xb_re <= adder(mult_1[31:16], mult_2[31:16], 1'b1);
-
 	mult_3 = diff_re * W_im;
 	mult_4 = diff_im * W_re;
-	Xb_im <= adder(mult_3[31:16], mult_4[31:16], 1'b0);
+
+	// mind the extra sign bit when truncating mult output
+	// eg. 8-bit q2.5 mult: s_mm.nnnnn * s_mm.nnnnn = ss_mmmm.nn_nnnn_nnnn
+	Xb_re <= adder(mult_1[30:15], mult_2[30:15], 1'b1);
+	Xb_im <= adder(mult_3[30:15], mult_4[30:15], 1'b0);
 
 end
 
