@@ -54,9 +54,13 @@ module FFT_top
 
   always @(posedge clk) begin
     if (enable) begin
+
+    if (counter == 1023)
+      counter <= 0;
+    else
       counter <= counter + 1;
     end else if (rst) begin
-      counter <= 0;
+      counter <= 1023;
     end
   end
 
