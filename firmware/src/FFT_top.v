@@ -17,8 +17,8 @@ module FFT_top
   wire [15:0] stage_interconn_re [log_FFT_N+1:0];
   wire [15:0] stage_interconn_im [log_FFT_N+1:0];
 
-  reg [log_FFT_N:0] counter;
-  reg [log_FFT_N:0] counter_reg;
+  reg [log_FFT_N-1:0] counter;
+  reg [log_FFT_N-1:0] counter_reg;
   reg [15:0] xb_re_reg;
   reg [15:0] xb_im_reg;
 

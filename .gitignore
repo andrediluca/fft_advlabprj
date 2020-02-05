@@ -1,3 +1,5 @@
 firmware/FFT_spctr
 *.mem
 *checkpoint.ipynb
+vivado*
+.Xil
