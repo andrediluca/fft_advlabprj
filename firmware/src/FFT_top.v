@@ -18,11 +18,10 @@ module FFT_top
   wire [15:0] stage_interconn_im [log_FFT_N+1:0];
 
   reg [log_FFT_N-1:0] counter;
-  reg [log_FFT_N-1:0] counter_delayed [log_FFT_N-1:0];
+  reg [log_FFT_N-1:0] counter_reg;
   reg [15:0] xb_re_reg;
   reg [15:0] xb_im_reg;
 
-  
   // generate stages
   genvar i;
   generate
@@ -30,8 +29,8 @@ module FFT_top
       stage #(.FFT_N(FFT_N), .stage_no(i)) stage_inst(
         .clk(clk),
         .enable(enable),
-        .ctrl(counter_delayed[i][log_FFT_N-1-i]),
-        .address(counter_delayed[i][log_FFT_N-1-i:0]),
+        .ctrl(counter_reg[log_FFT_N-1-i]),
+        .address(counter_reg[log_FFT_N-1-i:0]),
         .bf_xb_re(stage_interconn_re[i]),
         .bf_xb_im(stage_interconn_im[i]),
         .X_out_re(stage_interconn_re[i+1]),
@@ -44,8 +43,7 @@ module FFT_top
   stage #(.FFT_N(FFT_N), .stage_no(log_FFT_N)) stage_inst(
     .clk(clk),
     .enable(enable),
-    .address(),
-    .ctrl(counter_delayed[log_FFT_N-1][0]),
+    .ctrl(counter_reg[0]),
     .bf_xb_re(stage_interconn_re[log_FFT_N-1]),
     .bf_xb_im(stage_interconn_im[log_FFT_N-1]),
     .X_out_re(stage_interconn_re[log_FFT_N]),
@@ -56,23 +54,14 @@ module FFT_top
   assign stage_interconn_im[0] = xb_im_reg;
   assign Xb_re = stage_interconn_re[log_FFT_N];
   assign Xb_im = stage_interconn_im[log_FFT_N];
-  
-  genvar j;
-  generate
-  for(j = 0; j < log_FFT_N ; j = j + 1) begin
-    always @(posedge clk) begin
-      if (enable) begin
-        counter_delayed[j+1] <= counter_delayed[j];
-      end
-    end
-  end
-  endgenerate
-  
+
+
   always @(posedge clk) begin
+    counter_reg <= counter;
     xb_re_reg <= xb_re;
     xb_im_reg <= xb_im;
     if (enable) begin
-      counter_delayed[0] <= counter;
+
       if (counter == 1023)
         counter <= 0;
       else
@@ -82,7 +71,5 @@ module FFT_top
 
     end
   end
-  
-  
 
 endmodule
