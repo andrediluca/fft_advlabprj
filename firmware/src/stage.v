@@ -23,15 +23,19 @@ wire signed [15:0] dly_out_re, dly_out_im, dly_in_re, dly_in_im;
 reg ctrl_dly = 0;
 reg signed [15:0] bf_xb_re_dly;
 reg signed [15:0] bf_xb_im_dly;
+reg signed [15:0] dly_out_re_reg;
+reg signed [15:0] dly_out_im_reg;
 
 always @(posedge clk) begin
   ctrl_dly <= ctrl;
   bf_xb_re_dly <= bf_xb_re;
   bf_xb_im_dly <= bf_xb_im;
+  dly_out_re_reg <= dly_out_re;
+  dly_out_im_reg <= dly_out_im;
 end
 
-assign X_out_re = (ctrl) ? bf_Xa_re : dly_out_re;
-assign X_out_im = (ctrl) ? bf_Xa_im : dly_out_im;
+assign X_out_re = (ctrl_dly) ? bf_Xa_re : dly_out_re_reg;
+assign X_out_im = (ctrl_dly) ? bf_Xa_im : dly_out_im_reg;
 assign dly_in_re = (ctrl_dly) ? bf_Xb_re : bf_xb_re_dly;
 assign dly_in_im = (ctrl_dly) ? bf_Xb_im : bf_xb_im_dly;
 
