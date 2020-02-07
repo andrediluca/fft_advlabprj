@@ -64,7 +64,7 @@ generate
 
     assign dly_out_re = dly_in_re;
     assign dly_out_im = dly_in_im;
-    assign W_re = 16'h2710;
+    assign W_re = 16'h7fff;
     assign W_im = 0;
 
   end
