@@ -15,8 +15,8 @@ module butterfly(
 	input wire signed [15:0] W_re,  // real part of twiddle from ROM
 	input wire signed [15:0] W_im,  // im part of twiddle from ROM
 	// output data
-	output wire signed [15:0] Xa_re,
-	output wire signed [15:0] Xa_im,
+	output reg signed [15:0] Xa_re,
+	output reg signed [15:0] Xa_im,
 	output reg signed [15:0] Xb_re,
 	output reg signed [15:0] Xb_im
 );
@@ -54,11 +54,12 @@ reg signed [15:0] diff_re;
 reg signed [15:0] diff_im;
 reg signed [31:0] mult_1, mult_2, mult_3, mult_4;
 
-assign Xa_re = adder(xa_re, xb_re, 1'b0);
-assign Xa_im = adder(xa_im, xb_im, 1'b0);
 
 always @(posedge clk) begin
 
+    Xa_re <= adder(xa_re, xb_re, 1'b0);
+    Xa_im <= adder(xa_im, xb_im, 1'b0);
+    
 	diff_re = adder(xa_re, xb_re, 1'b1);
 	diff_im = adder(xa_im, xb_im, 1'b1);
 

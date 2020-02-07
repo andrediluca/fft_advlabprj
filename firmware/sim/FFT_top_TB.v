@@ -42,10 +42,11 @@ initial begin
 	rst = 0;
 	enable = 1;
 	for(i=0; i<1024; i=i+1) begin
-		xb_re = test_data[i];
+		//xb_re = test_data[i];
+		xb_re = 1;
 		#tclk;
 	end
-
+    #(tclk * 10);
 	for(i=0; i<1024; i=i+1) begin
 		result_re[i] = Xb_re;
 		result_im[i] = Xb_im;
