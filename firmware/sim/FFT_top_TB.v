@@ -6,7 +6,7 @@ module FFT_top_TB(
 parameter tclk = 20;
 
 reg clk = 0;
-reg rst;
+reg rst = 1;
 reg enable;
 reg signed [15:0] xb_re;
 reg signed [15:0] xb_im;

@@ -51,7 +51,7 @@ always @(posedge CLK) begin
     
     end 
     
-    if (reset==0) begin
+    if (reset==1) begin
         counter_USB<=0;
         counter_done<=0;
     end
