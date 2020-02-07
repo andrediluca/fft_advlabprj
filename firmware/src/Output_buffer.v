@@ -29,6 +29,7 @@ module Output_buffer(
     input[15:0] data_in_im,
     output [7:0] data_out,
     output data_valid,
+    output buff_full,
     input data_rd
     );
 
@@ -67,7 +68,7 @@ always @(posedge CLK) begin
     end
 end 
  
-out_buffer your_instance_name (
+out_buffer buff (
   .rst(reset),                // input wire rst
   .wr_clk(CLK),               // input wire wr_clk
   .rd_clk(usbCLK),            // input wire rd_clk
@@ -75,7 +76,7 @@ out_buffer your_instance_name (
   .wr_en(buff_data_in_valid), // input wire wr_en
   .rd_en(data_rd),           // input wire rd_en
   .dout(data_out),            // output wire [7 : 0] dout
-  .full(),                    // output wire full
+  .full(buff_full),           // output wire full
   .empty(buff_empty)          // output wire empty
   //.wr_rst_busy(data_out),   // output wire wr_rst_busy
   //.rd_rst_busy(rd_rst_busy) // output wire rd_rst_busy
