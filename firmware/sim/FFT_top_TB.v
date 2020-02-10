@@ -42,9 +42,13 @@ initial begin
 	rst = 0;
 	enable = 1;
 	for(i=0; i<1024; i=i+1) begin
-		//xb_re = test_data[i];
-		xb_re = 1;
+		xb_re = test_data[i];
+		//xb_re = 1;
 		#tclk;
+		enable = 0;
+		#(tclk*10);
+		enable = 1;
+
 	end
     #(tclk * 10);
 	for(i=0; i<1024; i=i+1) begin
