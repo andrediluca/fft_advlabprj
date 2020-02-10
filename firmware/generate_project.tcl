@@ -55,7 +55,8 @@ create_ip -name xadc_wiz -vendor xilinx.com -library ip -version 3.3 -module_nam
 set_property -dict [list \
 	CONFIG.INTERFACE_SELECTION {None} \
 	CONFIG.ENABLE_AXI4STREAM {true} \
-	CONFIG.ADC_CONVERSION_RATE {48} \
+	CONFIG.DCLK_FREQUENCY {50} \
+	CONFIG.ADC_CONVERSION_RATE {49} \
 	CONFIG.ENABLE_RESET {true} \
 	CONFIG.OT_ALARM {false} \
 	CONFIG.USER_TEMP_ALARM {false} \

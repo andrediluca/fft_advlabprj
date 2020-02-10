@@ -42,9 +42,6 @@ assign SIWU_N = 1; //aaaaaaaaaaaaa
 
 wire m_axis_tvalid;
 wire [15:0] m_axis_tdata;
-wire m_axis_resetn;
-wire vauxp0;
-wire vauxn0;
 wire eoc_out;
 wire [4:0] channel_out;
 
@@ -90,7 +87,7 @@ FFT_top FFT_core (
 	.clk(CLK),
 	.rst(rst),
 	.enable(fft_enable),
-	.xb_re({4'd0, m_axis_tdata[11:0]}),
+	.xb_re({4'd0, m_axis_tdata[15:3]}),
 	.xb_im(0),
 	.Xb_re(out_re),
 	.Xb_im(out_im)
