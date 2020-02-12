@@ -1,0 +1,107 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 31.01.2020 10:13:15
+// Design Name: 
+// Module Name: System_Top
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module System_Top_noXADC(
+    input sysCLK,
+    input rst,
+    input enable_sw,
+    input [11:0] data,
+    input data_valid,
+    
+	input FT_CLK,
+	inout [7:0] FT_DATA,
+	input FT_RXF_N,
+	input FT_TXE_N,
+	output FT_OE_N,
+	output FT_WR_N,
+	output FT_RD_N,
+	output SIWU_N
+);
+
+assign SIWU_N = 1; //aaaaaaaaaaaaa
+
+wire ftclk60;
+wire [15:0] out_re, out_im;
+wire [7:0] usb_data_out;
+wire usb_data_valid, data_rd;
+
+wire enable, fft_enable;
+assign enable = ~buff_full & enable_sw;
+assign fft_enable = data_valid & enable;
+
+wire signed [15:0] input_data;
+assign input_data = (data[11] == 0) ? {4'b0000, data} : {4'b1111, data};
+
+wire n_rst;
+assign n_rst = ~ rst;
+
+clk_wiz_0 ftpll (
+    .FT_CLK(FT_CLK),
+    .ftclk60(ftclk60)
+);
+
+clk_wiz_1 syspll (
+    .clk_in1(sysCLK),
+    .clk50(CLK)
+);
+
+FFT_top FFT_core (
+	.clk(CLK),
+	.rst(rst),
+	.enable(fft_enable),
+	.xb_re(input_data),
+	.xb_im(0),
+	.Xb_re(out_re),
+	.Xb_im(out_im)
+);
+
+Output_buffer outbf(
+    .CLK(CLK),
+    .usbCLK(ftclk60),
+    .reset(rst),
+    .enable(fft_enable),
+    .data_in_re(out_re),
+    .data_in_im(out_im),
+    .data_out(usb_data_out),
+    .data_valid(usb_data_valid),
+    .buff_full(buff_full),
+    .data_rd(data_rd)
+);
+
+FTDI_mFIFO usb_out (
+	.CLK(ftclk60),
+	.DATA(FT_DATA),
+	.RXF_N(FT_RXF_N),
+	.TXE_N(FT_TXE_N),
+	.OE_N(FT_OE_N),
+	.RD_N(FT_RD_N),
+	.WR_N(FT_WR_N),
+	// internal iface
+	.rstn(n_rst),
+	.data_in(usb_data_out),
+	.in_DV(usb_data_valid),
+	.din_rd(data_rd),
+	.pause_rcv(1)
+);
+
+endmodule
+
