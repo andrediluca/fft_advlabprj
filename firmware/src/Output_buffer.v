@@ -42,8 +42,8 @@ wire buff_empty;
 always @(posedge CLK) begin
 
     if (enable==1) begin
-    
-        if(counter_USB>1024)
+        //1024 + 10
+        if(counter_USB>1032)
             counter_done<=1;
         
         else 
