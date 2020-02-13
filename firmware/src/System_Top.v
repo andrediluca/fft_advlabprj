@@ -38,12 +38,14 @@ module System_Top(
 	output SIWU_N
 );
 
-assign SIWU_N = 1; //aaaaaaaaaaaaa
+assign SIWU_N = 1;
 
 wire m_axis_tvalid;
 wire [15:0] m_axis_tdata;
 wire eoc_out;
 wire [4:0] channel_out;
+wire signed [15:0] input_data;
+assign input_data = (m_axis_tdata[15]) ? {4'b1111, m_axis_tdata[15:3]} : {4'b0000, m_axis_tdata[15:3]};
 
 wire ftclk60;
 wire [15:0] out_re, out_im;
@@ -87,7 +89,7 @@ FFT_top FFT_core (
 	.clk(CLK),
 	.rst(rst),
 	.enable(fft_enable),
-	.xb_re({4'd0, m_axis_tdata[15:3]}),
+	.xb_re(input_data),
 	.xb_im(0),
 	.Xb_re(out_re),
 	.Xb_im(out_im)
