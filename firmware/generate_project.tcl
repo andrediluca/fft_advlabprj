@@ -14,7 +14,7 @@ add_files -fileset sim_1 "${root_dir}/sim/"
 set_property file_type Verilog [get_files -of [get_filesets [list sources_1 sim_1]]]
 update_compile_order -fileset sources_1
 
-create_ip -name clk_wiz -vendor xilinx.com -library ip -version 6.0 -module_name clk_wiz_0
+create_ip -name clk_wiz -vendor xilinx.com -library ip -module_name clk_wiz_0
 set_property -dict [list \
 	CONFIG.USE_FREQ_SYNTH {false} \
 	CONFIG.PRIM_IN_FREQ {60} \
@@ -25,7 +25,7 @@ set_property -dict [list \
 	CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {60}] \
 	[get_ips clk_wiz_0]
 
-create_ip -name clk_wiz -vendor xilinx.com -library ip -version 6.0 -module_name clk_wiz_1
+create_ip -name clk_wiz -vendor xilinx.com -library ip -module_name clk_wiz_1
 set_property -dict [list \
 	CONFIG.PRIMITIVE {PLL} \
 	CONFIG.CLK_IN1_BOARD_INTERFACE {sys_clock} \
@@ -39,17 +39,23 @@ set_property -dict [list \
 	CONFIG.MMCM_CLKOUT0_DIVIDE_F {17}] \
 	[get_ips clk_wiz_1]
 
-create_ip -name fifo_generator -vendor xilinx.com -library ip -version 13.2 -module_name out_buffer
+create_ip -name fifo_generator -vendor xilinx.com -library ip -module_name out_buffer
 set_property -dict [list \
 	CONFIG.Fifo_Implementation {Independent_Clocks_Block_RAM} \
 	CONFIG.Performance_Options {First_Word_Fall_Through} \
 	CONFIG.Input_Data_Width {32} \
-	CONFIG.Output_Data_Width {8} \
+	CONFIG.Output_Data_Width {32} \
 	CONFIG.Output_Depth {4096} \
 	CONFIG.Reset_Type {Asynchronous_Reset} \
-	CONFIG.Full_Flags_Reset_Value {1} \
-	CONFIG.Read_Data_Count_Width {12}] \
+	CONFIG.Full_Flags_Reset_Value {1}] \
 	[get_ips out_buffer]
+
+create_ip -name axis_dwidth_converter -vendor xilinx.com -library ip -module_name axis_dwidth_converter
+set_property -dict [list \
+	CONFIG.S_TDATA_NUM_BYTES {4} \
+	CONFIG.M_TDATA_NUM_BYTES {1} \
+	CONFIG.Component_Name {axis_dwidth_converter}] \
+	[get_ips axis_dwidth_converter]
 
 create_ip -name xadc_wiz -vendor xilinx.com -library ip -version 3.3 -module_name xadc_wiz_0
 set_property -dict [list \

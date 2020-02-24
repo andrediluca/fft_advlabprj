@@ -22,7 +22,7 @@ module FFT_top
   reg [15:0] xb_re_reg;
   reg [15:0] xb_im_reg;
 
-  
+
   // generate stages
   genvar i;
   generate
@@ -56,7 +56,7 @@ module FFT_top
   assign stage_interconn_im[0] = xb_im_reg;
   assign Xb_re = stage_interconn_re[log_FFT_N];
   assign Xb_im = stage_interconn_im[log_FFT_N];
-  
+
   genvar j;
   generate
   for(j = 0; j < log_FFT_N ; j = j + 1) begin
@@ -67,11 +67,13 @@ module FFT_top
     end
   end
   endgenerate
-  
+
   always @(posedge clk) begin
-    xb_re_reg <= xb_re;
-    xb_im_reg <= xb_im;
+
     if (enable) begin
+      xb_re_reg <= xb_re;
+      xb_im_reg <= xb_im;
+
       counter_delayed[0] <= counter;
       if (counter == 1023)
         counter <= 0;
@@ -82,7 +84,6 @@ module FFT_top
 
     end
   end
-  
-  
+
 
 endmodule

@@ -20,14 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module System_Top(
+module System_Top_noXADC(
     input sysCLK,
     input rst,
     input enable_sw,
-    //input noise_p,
-    //input noise_n,
-    input vp_in,
-    input vn_in,
+    input [11:0] data,
+    input data_valid,
+    
 	input FT_CLK,
 	inout [7:0] FT_DATA,
 	input FT_RXF_N,
@@ -38,14 +37,7 @@ module System_Top(
 	output SIWU_N
 );
 
-assign SIWU_N = 1;
-
-wire m_axis_tvalid;
-wire [15:0] m_axis_tdata;
-wire eoc_out;
-wire [4:0] channel_out;
-wire signed [15:0] input_data;
-assign input_data = (m_axis_tdata[15]) ? {4'b1111, m_axis_tdata[15:3]} : {4'b0000, m_axis_tdata[15:3]};
+assign SIWU_N = 1; //aaaaaaaaaaaaa
 
 wire ftclk60;
 wire [15:0] out_re, out_im;
@@ -54,7 +46,11 @@ wire usb_data_valid, data_rd;
 
 wire enable, fft_enable;
 assign enable = ~buff_full & enable_sw;
-assign fft_enable = m_axis_tvalid & enable;
+assign fft_enable = data_valid & enable;
+
+wire signed [15:0] input_data;
+assign input_data = (data[11] == 0) ? {4'b0000, data} : {4'b1111, data};
+
 wire n_rst;
 assign n_rst = ~ rst;
 
@@ -66,23 +62,6 @@ clk_wiz_0 ftpll (
 clk_wiz_1 syspll (
     .clk_in1(sysCLK),
     .clk50(CLK)
-);
-
-
-xadc_wiz_0 our_XADC (
-  .m_axis_tvalid(m_axis_tvalid),
-  .m_axis_tready(enable),
-  .m_axis_tdata(m_axis_tdata),
-  .m_axis_aclk(CLK),
-  .s_axis_aclk(CLK),
-  .m_axis_resetn(n_rst),
-  .eoc_out(eoc_out),
-  .channel_out(channel_out),
-  .vp_in(vp_in),
-  .vn_in(vn_in)
-  //.vauxp0(noise_p),
-  //.vauxn0(noise_n)
- 
 );
 
 FFT_top FFT_core (

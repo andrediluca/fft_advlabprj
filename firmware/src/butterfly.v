@@ -7,6 +7,7 @@
 module butterfly(
 	// control signals
 	input wire clk,
+	input wire enable,
 	// input data
 	input wire signed [15:0] xa_re, // real part of a
 	input wire signed [15:0] xa_im, // im part of b
@@ -57,21 +58,23 @@ reg signed [31:0] mult_1, mult_2, mult_3, mult_4;
 
 always @(posedge clk) begin
 
-    Xa_re <= adder(xa_re, xb_re, 1'b0);
-    Xa_im <= adder(xa_im, xb_im, 1'b0);
-    
-	diff_re = adder(xa_re, xb_re, 1'b1);
-	diff_im = adder(xa_im, xb_im, 1'b1);
+	if (enable) begin
+		Xa_re <= adder(xa_re, xb_re, 1'b0);
+		Xa_im <= adder(xa_im, xb_im, 1'b0);
 
-	mult_1 = diff_re * W_re;
-	mult_2 = diff_im * W_im;
-	mult_3 = diff_re * W_im;
-	mult_4 = diff_im * W_re;
+		diff_re = adder(xa_re, xb_re, 1'b1);
+		diff_im = adder(xa_im, xb_im, 1'b1);
 
-	// mind the extra sign bit when truncating mult output
-	// eg. 8-bit q2.5 mult: s_mm.nnnnn * s_mm.nnnnn = ss_mmmm.nn_nnnn_nnnn
-	Xb_re <= adder(mult_1[30:15], mult_2[30:15], 1'b1);
-	Xb_im <= adder(mult_3[30:15], mult_4[30:15], 1'b0);
+		mult_1 = diff_re * W_re;
+		mult_2 = diff_im * W_im;
+		mult_3 = diff_re * W_im;
+		mult_4 = diff_im * W_re;
+
+		// mind the extra sign bit when truncating mult output
+		// eg. 8-bit q2.5 mult: s_mm.nnnnn * s_mm.nnnnn = ss_mmmm.nn_nnnn_nnnn
+		Xb_re <= adder(mult_1[30:15], mult_2[30:15], 1'b1);
+		Xb_im <= adder(mult_3[30:15], mult_4[30:15], 1'b0);
+	end
 
 end
 
